@@ -22,14 +22,20 @@ text_input = st.text_area('', height=200)
 # Button to trigger text classification
 if st.button('Classificar atendimento'):
     # Make a request to your API for text classification
-    api_url = 'http://your_api_url_here'
-    response = requests.post(api_url, json={'text': text_input})
+    api_url = 'https://functionappdecria.azurewebsites.net/api/predictnlpdecria'
+    headers = {'x-functions-key': 'valuedecria'}
+    response = requests.post(api_url, json={'data': text_input}, headers=headers)
     
     # Display the classification result
     if response.status_code == 200:
-        result = response.json()['result']
+        # print(response)
+        # print(response.text)
+        result = response.text
+        # result = response.json()
         st.write('## Resultado da classificação do chamado:')
-        st.write(f'O chamado foi classificado como: **{result}**')
+        st.markdown(f'O chamado foi classificado como: <span style="color:green"><b>{result}</b></span>', unsafe_allow_html=True)
     else:
         st.write('## Erro')
         st.write('Não foi possível classificar o texto. Por favor, tente novamente.')
+        # Print error
+        st.write(response.text)
